@@ -1,0 +1,26 @@
+- name: Power Off All the Virtual Machines 
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+
+  vars:
+    esxi_host: "192.168.1.207"
+    esxi_user: "root"
+    esxi_password: "Asimov@123"
+    vms_to_power_off:
+      - windows-template
+      - rhel-8-template
+      - centos-stream9-template
+
+  tasks:
+    - name: Power off specified VMs
+      community.vmware.vmware_guest_powerstate:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_user }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        name: "{{ item }}"
+        state: powered-off
+      loop: "{{ vms_to_power_off }}"
+

@@ -1,0 +1,66 @@
+- name: Power Off All the Virtual Machines 
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+
+  vars_prompt:
+    - name: "esxi_user"
+      prompt: "Enter ESXi username"
+      private: no
+      default: "root"
+    - name: "esxi_password"
+      prompt: "Enter ESXi password"
+      private: yes
+    - name: "esxi_host"
+      prompt: "Enter ESXi hostname or IP"
+      private: no
+      default: "192.168.1.207"
+    - name: "datacenter"
+      prompt: "Enter vSphere datacenter name"
+      private: no
+      default: "ha-datacenter"
+    - name: "vms_to_power_off"
+      prompt: |
+        Available VMs:
+        {% set vm_list = lookup('file', 'vmware_vm_report.txt').split('\n')
+          | select('match', '^\\|\\s+[^\\+\\-\\s].*')
+          | map('regex_search', '^\\|\\s+([a-zA-Z0-9\\-_]+)\\s+', '\\1')
+          | map('first')
+          | list %}
+        {{ vm_list | join(', ') }}
+
+        Enter comma-separated VM names to power off from the above list (or 'all' to power off all):
+      private: no
+
+  tasks:
+    - name: Get VM list from report file
+      set_fact:
+        all_vms: "{{ lookup('file', 'vmware_vm_report.txt').split('\n')
+                    | select('match', '^\\|\\s+[^\\+\\-\\s].*')
+                    | map('regex_search', '^\\|\\s+([a-zA-Z0-9\\-_]+)\\s+', '\\1')
+                    | map('first')
+                    | list }}"
+
+    - name: Determine VMs to power off based on input
+      set_fact:
+        vm_list: >-
+          {{
+            ('all' in (vms_to_power_off | lower))
+            | ternary(all_vms, vms_to_power_off.split(',') | map('trim') | list)
+          }}
+
+    - name: Debug vm_list
+      debug:
+        var: vm_list
+
+    - name: Power off specified VMs
+      vmware.vmware.vm_powerstate:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_user }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        datacenter: "{{ datacenter }}"
+        name: "{{ item }}"
+        state: powered-off
+      loop: "{{ vm_list }}"

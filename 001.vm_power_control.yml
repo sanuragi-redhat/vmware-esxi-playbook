@@ -1,0 +1,34 @@
+- name: Control power state of a VM
+  hosts: localhost
+  gather_facts: false
+  connection: local
+  collections:
+    - community.vmware
+  vars:
+    vcenter_hostname: "192.168.1.207"
+    vcenter_username: "root"
+    vcenter_password: "Asimov@123"
+    datacenter_name: "Datacenter"
+    vm_name: "rhel-8-template"
+    desired_state: "powered-on"
+
+  tasks:
+
+    - name: Power state management of a VM
+      vmware_guest_powerstate:
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        validate_certs: no
+        datacenter: "{{ datacenter_name }}"
+        name: "{{ vm_name }}"
+        state: "{{ desired_state }}"
+        state_change_timeout: 120
+      delegate_to: localhost
+      register: result
+       
+    - name: Show VM name and power state
+      debug:
+        msg: "VM '{{ result.instance.hw_name }}' is currently '{{ result.instance.hw_power_status }}'"
+
+

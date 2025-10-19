@@ -1,0 +1,39 @@
+- name: Collect VM Information from vSphere
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+
+  vars:
+    esxi_host: "192.168.1.207"
+    esxi_user: "root"
+    esxi_password: "Asimov@123"
+
+  tasks:
+    - name: Gather list of VMs
+      community.vmware.vmware_vm_info:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_user }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+      register: vm_info
+
+    - name: Generate VM Information Table
+      set_fact:
+        vm_table: |
+          +---------------------------+-------------------------------+--------------+-----------+----------------------+
+          | VM Name                  | OS Guest                      | Power State  | Datastore | MAC Address          |
+          +---------------------------+-------------------------------+--------------+-----------+----------------------+
+          {% for vm in vm_info.virtual_machines %}
+          | {{ "%-25s" | format(vm.guest_name | default("N/A")) }} | {{ "%-29s" | format(vm.guest_fullname | default("N/A")) }} | {{ "%-12s" | format(vm.power_state | default("N/A")) }} | {{ "%-9s" | format(vm.datastore_url[0].name | default("N/A")) }} | {{ "%-20s" | format(vm.mac_address[0] | default("N/A")) }} |
+          {% endfor %}
+          +---------------------------+-------------------------------+--------------+-----------+----------------------+
+
+    - name: Show VM Information in Table Format
+      debug:
+        msg: "{{ vm_table }}"
+
+    - name: Save VM Info Table to file
+      copy:
+        dest: "./vmware_vm_report.txt"
+        content: "{{ vm_table }}"

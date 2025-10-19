@@ -1,0 +1,79 @@
+---
+- name: Deploy Windows VM from ISO on ESXi
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+  vars:
+    esxi_host: "192.168.1.207"         # Your ESXi host IP
+    esxi_user: "root"
+    esxi_password: "Asimov@123"
+    datacenter_name: "ha-datacenter"
+    folder_path: "ha-datacenter/vm"     # VMware folder path (no leading slash)
+    new_vm_name: "windws-master"      
+    datastore_name: "datawork"          # Datastore for VM storage
+    network_name: "VM Network"          # Network to connect the VM
+    netmask: "255.255.255.0"
+    gateway: "192.168.1.1"
+    ip_address: "192.168.1.211"         # Static IP address for the VM (no leading zeros)
+    guest_id: "windows9Server64Guest"
+    dns_servers:
+      - "192.168.1.254"
+      - "8.8.8.8"
+    customization:
+      dns_suffix:
+        - "ocp1.redhat-workshop"
+      domain: "rhel-kvm.ocp1.redhat-workshop.in"
+      hostname: "windows-vm"
+      password: "P@ssw0rd1234"
+      timezone: "0"
+      runonce:
+        - powershell.exe Add-LocalGroupMember -Group "Administrators" -Member "SVC_ansible_local"
+        - powershell.exe Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False
+
+  tasks:
+    - name: Deploy Windows VM from ISO
+      community.vmware.vmware_guest:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_user }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        datacenter: "{{ datacenter_name }}"
+        folder: "{{ folder_path }}"
+        name: "{{ new_vm_name }}"
+        guest_id: "windows9Server64Guest"
+        datastore: "{{ datastore_name }}"
+        networks:
+          - name: "{{ network_name }}"
+            ip: "{{ ip_address }}"
+            netmask: "{{ netmask }}"
+            gateway: "{{ gateway }}"
+            dns_servers: "{{ dns_servers }}"
+        hardware:
+          memory_mb: 4096
+          num_cpus: 02
+          version: latest
+        disk:
+          - size_gb: 040
+            type: thin
+            datastore: "{{ datastore_name }}"
+       
+        cdrom:
+          - type: iso
+            iso_path: "[{{ datastore_name }}] windows-server-2025.iso"
+            controller_type: ide
+            controller_number: 0
+            unit_number: 0
+
+        customization:
+          dns_suffix: "{{ customization.dns_suffix }}"
+          domain: "{{ customization.domain }}"
+          hostname: "{{ customization.hostname }}"
+          password: "{{ customization.password }}"
+          timezone: "{{ customization.timezone }}"
+          runonce: "{{ customization.runonce }}"
+        wait_for_ip_address: yes
+        state: poweredon
+      delegate_to: localhost
+      register: vm_deploy
+

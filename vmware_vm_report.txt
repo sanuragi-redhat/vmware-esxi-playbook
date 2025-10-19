@@ -1,0 +1,5 @@
++---------------------------+-------------------------------+--------------+-----------+----------------------+
+| windows-template          | Microsoft Windows Server 2025 (64-bit) | poweredOff   | datawork  | 00:0c:29:48:1e:6e    |
+| rhel-8-template           | Red Hat Enterprise Linux 8 (64-bit) | poweredOff   | datawork  | 00:0c:29:d9:7e:61    |
+| centos-stream9-template   | CentOS 8 (64-bit)             | poweredOff   | datawork  | 00:0c:29:e7:bc:c4    |
++---------------------------+-------------------------------+--------------+-----------+----------------------+
