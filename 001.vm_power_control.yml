@@ -5,11 +5,11 @@
   collections:
     - community.vmware
   vars:
-    vcenter_hostname: "192.168.1.207"
+    vcenter_hostname: "192.168.1.3"
     vcenter_username: "root"
-    vcenter_password: "password"
+    vcenter_password: "#####"
     datacenter_name: "Datacenter"
-    vm_name: "rhel-8-template"
+    vm_name: "windows-master"
     desired_state: "powered-on"
 
   tasks:

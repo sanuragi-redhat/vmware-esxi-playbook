@@ -1,0 +1,67 @@
+---
+- name: Apply Forklift Migration Plan to OpenShift
+  hosts: localhost
+  gather_facts: no
+  vars:
+    kubeconfig_path: "/root/ocp4/auth/kubeconfig"
+
+  tasks:
+    - name: Apply Forklift Plan
+      k8s:
+        kubeconfig: "{{ kubeconfig_path }}"
+        state: present
+        definition: |
+          apiVersion: forklift.konveyor.io/v1beta1
+          kind: Plan
+          metadata:
+            name: redhat-migration-plan
+            namespace: openshift-mtv
+            annotations:
+              populatorLabels: 'True'
+          spec:
+            pvcNameTemplateUseGenerateName: true
+            warm: false
+            migrateSharedDisks: true
+            targetNamespace: uat-infra-tools
+            useCompatibilityMode: true
+            skipGuestConversion: false
+            provider:
+              destination:
+                apiVersion: forklift.konveyor.io/v1beta1
+                kind: Provider
+                name: host
+                namespace: openshift-mtv
+              source:
+                apiVersion: forklift.konveyor.io/v1beta1
+                kind: Provider
+                name: vmware-2025
+                namespace: openshift-mtv
+            vms:
+              - id: '10'
+                name: rhel-8-template
+            map:
+              network:
+                apiVersion: forklift.konveyor.io/v1beta1
+                kind: NetworkMap
+                name: redhat
+                namespace: openshift-mtv
+              storage:
+                apiVersion: forklift.konveyor.io/v1beta1
+                kind: StorageMap
+                name: data
+                namespace: openshift-mtv
+    - name: Start migration using the Forklift Plan
+      k8s:
+        kubeconfig: "{{ kubeconfig_path }}"
+        state: present
+        definition: |
+          apiVersion: forklift.konveyor.io/v1beta1
+          kind: Migration
+          metadata:
+            generateName: centos-migration-
+            namespace: openshift-mtv
+          spec:
+            plan:
+              name: redhat-migration-plan
+              namespace: openshift-mtv
+

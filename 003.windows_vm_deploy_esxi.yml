@@ -5,13 +5,13 @@
   collections:
     - community.vmware
   vars:
-    esxi_host: "192.168.1.207"         # Your ESXi host IP
+    esxi_host: "192.168.1.3"         # Your ESXi host IP
     esxi_user: "root"
-    esxi_password: "password"
+    esxi_password: "#####"
     datacenter_name: "ha-datacenter"
     folder_path: "ha-datacenter/vm"     # VMware folder path (no leading slash)
     new_vm_name: "windws-master"      
-    datastore_name: "datawork"          # Datastore for VM storage
+    datastore_name: "datastore2"          # Datastore for VM storage
     network_name: "VM Network"          # Network to connect the VM
     netmask: "255.255.255.0"
     gateway: "192.168.1.1"

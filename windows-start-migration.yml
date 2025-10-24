@@ -1,0 +1,23 @@
+---
+- name: Apply Forklift Migration Plan to OpenShift
+  hosts: localhost
+  gather_facts: no
+  vars:
+    kubeconfig_path: "/root/ocp4/auth/kubeconfig"
+
+  tasks:
+    - name: Start migration using the Forklift Plan
+      k8s:
+        kubeconfig: "{{ kubeconfig_path }}"
+        state: present
+        definition: |
+          apiVersion: forklift.konveyor.io/v1beta1
+          kind: Migration
+          metadata:
+            generateName: centos-migration-
+            namespace: openshift-mtv
+          spec:
+            plan:
+              name: centos-migration-plan
+              namespace: openshift-mtv
+

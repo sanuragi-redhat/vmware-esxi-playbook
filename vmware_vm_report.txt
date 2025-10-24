@@ -1,5 +1,6 @@
 +---------------------------+-------------------------------+--------------+-----------+----------------------+
-| windows-template          | Microsoft Windows Server 2025 (64-bit) | poweredOff   | datawork  | 00:0c:29:48:1e:6e    |
-| rhel-8-template           | Red Hat Enterprise Linux 8 (64-bit) | poweredOff   | datawork  | 00:0c:29:d9:7e:61    |
-| centos-stream9-template   | CentOS 8 (64-bit)             | poweredOff   | datawork  | 00:0c:29:e7:bc:c4    |
+| VM Name                  | OS Guest                      | Power State  | Datastore | MAC Address          |
++---------------------------+-------------------------------+--------------+-----------+----------------------+
+| windows-master            | Microsoft Windows Server 2016 (64-bit) | poweredOff   | datastore2 | 00:0c:29:5d:07:17    |
+| rhel96-master             | Red Hat Enterprise Linux 9 (64-bit) | poweredOn    | datastore2 | 00:0c:29:79:67:24    |
 +---------------------------+-------------------------------+--------------+-----------+----------------------+
