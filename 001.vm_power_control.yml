@@ -5,11 +5,11 @@
   collections:
     - community.vmware
   vars:
-    vcenter_hostname: "192.168.1.3"
+    vcenter_hostname: "192.168.0.253"
     vcenter_username: "root"
-    vcenter_password: "#####"
+    vcenter_password: "Asimov@123"
     datacenter_name: "Datacenter"
-    vm_name: "windows-master"
+    vm_name: "rhocp-bastion-vcenter"
     desired_state: "powered-on"
 
   tasks:
