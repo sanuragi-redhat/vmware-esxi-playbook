@@ -1,8 +1,6 @@
-- name: Power Off All the Virtual Machines 
+- name: Power Off All the Virtual Machines
   hosts: localhost
   gather_facts: no
-  collections:
-    - community.vmware
 
   vars_prompt:
     - name: "esxi_user"
@@ -26,6 +24,7 @@
         {% set vm_list = lookup('file', 'vmware_vm_report.txt').split('\n')
           | select('match', '^\\|\\s+[^\\+\\-\\s].*')
           | map('regex_search', '^\\|\\s+([a-zA-Z0-9\\-_]+)\\s+', '\\1')
+          | select('string')
           | map('first')
           | list %}
         {{ vm_list | join(', ') }}
@@ -39,6 +38,7 @@
         all_vms: "{{ lookup('file', 'vmware_vm_report.txt').split('\n')
                     | select('match', '^\\|\\s+[^\\+\\-\\s].*')
                     | map('regex_search', '^\\|\\s+([a-zA-Z0-9\\-_]+)\\s+', '\\1')
+                    | select('string')
                     | map('first')
                     | list }}"
 

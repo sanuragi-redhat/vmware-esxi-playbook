@@ -1,0 +1,38 @@
+- name: Power Off and Delete Virtual Machines
+  hosts: localhost
+  gather_facts: no
+  collections:
+    - community.vmware
+
+  vars:
+    esxi_host: "192.168.0.253"
+    esxi_user: "root"
+    esxi_password: "Asimov@123"
+    
+    vms_to_power_off:
+      - windws-master
+
+    vms_to_delete:
+      - windws-master
+
+  tasks:
+    - name: Power off specified VMs
+      community.vmware.vmware_guest_powerstate:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_user }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        name: "{{ item }}"
+        state: powered-off
+      loop: "{{ vms_to_power_off }}"
+
+    - name: Delete specified VMs completely (including disk files)
+      community.vmware.vmware_guest:
+        hostname: "{{ esxi_host }}"
+        username: "{{ esxi_user }}"
+        password: "{{ esxi_password }}"
+        validate_certs: no
+        name: "{{ item }}"
+        state: absent
+        force: yes
+      loop: "{{ vms_to_delete | default([]) }}"

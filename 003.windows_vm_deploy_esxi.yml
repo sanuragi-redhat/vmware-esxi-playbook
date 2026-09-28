@@ -5,21 +5,22 @@
   collections:
     - community.vmware
   vars:
-    esxi_host: "192.168.1.3"         # Your ESXi host IP
+    esxi_host: "192.168.0.253"         # Your ESXi host IP
     esxi_user: "root"
-    esxi_password: "#####"
+    esxi_password: "Asimov@123"
     datacenter_name: "ha-datacenter"
     folder_path: "ha-datacenter/vm"     # VMware folder path (no leading slash)
     new_vm_name: "windws-master"      
-    datastore_name: "datastore2"          # Datastore for VM storage
-    network_name: "VM Network"          # Network to connect the VM
+    datastore_name: "HPE_NVME_SSD"                 # Updated to match screenshot
+    iso_path: "[HPE_NVME_SSD] ISOs/windows-server-2025.iso"
     netmask: "255.255.255.0"
-    gateway: "192.168.1.1"
-    ip_address: "192.168.1.211"         # Static IP address for the VM (no leading zeros)
+    gateway: "192.168.0.1"
+    ip_address: "192.168.0.211"         # Static IP address for the VM (no leading zeros)
     guest_id: "windows9Server64Guest"
     dns_servers:
-      - "192.168.1.254"
+      - "192.168.0.30"
       - "8.8.8.8"
+    network_name: "VM Nework"
     customization:
       dns_suffix:
         - "ocp1.redhat-workshop"
@@ -60,7 +61,7 @@
        
         cdrom:
           - type: iso
-            iso_path: "[{{ datastore_name }}] windows-server-2025.iso"
+            iso_path: "[HPE_NVME_SSD] ISOs/windows-server-2025.iso"  # Added ISOs/ path
             controller_type: ide
             controller_number: 0
             unit_number: 0

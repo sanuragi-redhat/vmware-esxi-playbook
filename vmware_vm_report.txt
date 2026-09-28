@@ -1,6 +1,12 @@
 +---------------------------+-------------------------------+--------------+-----------+----------------------+
 | VM Name                  | OS Guest                      | Power State  | Datastore | MAC Address          |
 +---------------------------+-------------------------------+--------------+-----------+----------------------+
-| windows-master            | Microsoft Windows Server 2016 (64-bit) | poweredOff   | datastore2 | 00:0c:29:5d:07:17    |
-| rhel96-master             | Red Hat Enterprise Linux 9 (64-bit) | poweredOn    | datastore2 | 00:0c:29:79:67:24    |
+| vCLS-30393137-3436-4753-4836-323258485733 | VMware Photon CRX (64-bit)    | poweredOn    | N/A       | N/A                  |
+| windows-server-2025       | Microsoft Windows Server 2025 (64-bit) | poweredOff   | RHOCP_HPE_PROLIANT | 00:0c:29:6d:93:02    |
+| VMware vCenter Server     | Other 3.x or later Linux (64-bit) | poweredOn    | RHOCP_HPE_PROLIANT | 00:0c:29:db:18:85    |
+| squid.ocp-uat.blackmagiclinux.com | Red Hat Enterprise Linux 9 (64-bit) | poweredOff   | HPE_NVME_SSD | 00:0c:29:c0:9b:d2    |
+| pfsense-vswitch           | FreeBSD 14 or later versions (32-bit) | poweredOff   | HPE_NVME_SSD | 00:0c:29:24:04:a5    |
+| bmluatmirr.ocp-uat.blackmagiclinux.com | Red Hat Enterprise Linux 9 (64-bit) | poweredOff   | RHOCP_HPE_PROLIANT | 00:0c:29:4f:28:52    |
+| domain.blackmagiclinux.com | Red Hat Enterprise Linux 9 (64-bit) | poweredOff   | RHOCP_HPE_PROLIANT | 00:0c:29:48:1a:9f    |
+| bmluatbst.ocp-uat.blackmagiclinux.com | Red Hat Enterprise Linux 9 (64-bit) | poweredOff   | RHOCP_HPE_PROLIANT | 00:0c:29:93:e9:5b    |
 +---------------------------+-------------------------------+--------------+-----------+----------------------+
